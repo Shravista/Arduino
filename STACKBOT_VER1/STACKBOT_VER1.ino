@@ -5,6 +5,7 @@
 #define MOTORB_EN 11
 #define MOTORB_IN1 6
 #define MOTORB_IN2 10
+#define LED_PIN 12
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete
@@ -21,31 +22,40 @@ void setup() {
   pinMode(MOTORB_EN, OUTPUT);
   pinMode(MOTORB_IN1, OUTPUT);
   pinMode(MOTORB_IN2, OUTPUT);
+
+  pinMode(LED_PIN, OUTPUT);
 }
 
 void loop() {
   // print the string when a newline arrives:
+  String MA_dir, MB_dir;
+  int MA_pwm, MB_pwm;
+  auto val = LOW;
   if (stringComplete) {
     if (inputString.length() == 8) {
-      String MA_dir = String(inputString[0]);
-      String MB_dir = String(inputString[4]);  
+      MA_dir = String(inputString[0]);
+      MB_dir = String(inputString[4]);  
       String val1, val2;
       for (int i = 0; i < 3; i++){
         val1 += inputString[1+i];
         val2 += inputString[5+i];
       }
-      int MA_pwm = val1.toInt();
-      int MB_pwm = val2.toInt();
-      setMotorA(MA_dir, MA_pwm);
-      setMotorB(MB_dir, MB_pwm);
+      MA_pwm = val1.toInt();
+      MB_pwm = val2.toInt();
     }
-    
+    val = HIGH;
     stringComplete = false;
     inputString = "";
   }
 
-  setMotorA("NA",0);
-  setMotorB("NA",0);
+  if ((MA_dir.length() == 1) && (MB_dir.length() == 1)){
+    if ((MA_pwm == 0) || (MB_pwm == 0)) {
+      val = LOW;
+    }
+    digitalWrite(LED_PIN, val);
+    setMotorA(MA_dir, MA_pwm);
+    setMotorB(MB_dir, MB_pwm);
+  }
 }
 
 void setMotorA(String dir, int pwm){
