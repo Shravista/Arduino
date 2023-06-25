@@ -1,49 +1,62 @@
-#define MOTORA_EN 10
-#define MOTORA_IN1 8
-#define MOTORA_IN2 11
+#include <util/atomic.h>
 
-#define MOTORB_EN 12
-#define MOTORB_IN1 7
-#define MOTORB_IN2 6
+#define MOTOR_EN 10
+#define MOTOR_IN1 8
+#define MOTOR_IN2 11
+#define MOTOR_CHA 2
+#define MOTOR_CHB 3
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete
+volatile int posi = 0;
 
 void setup() {
   // initialize serial:
   Serial.begin(9600);
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
-  pinMode(MOTORA_EN, OUTPUT);
-  pinMode(MOTORA_IN1, OUTPUT);
-  pinMode(MOTORA_IN2, OUTPUT);
+  pinMode(MOTOR_EN, OUTPUT);
+  pinMode(MOTOR_IN1, OUTPUT);
+  pinMode(MOTOR_IN2, OUTPUT);
+  pinMode(MOTOR_CHA, INPUT);
+  pinMode(MOTOR_CHB, INPUT);
 
-  pinMode(MOTORB_EN, OUTPUT);
-  pinMode(MOTORB_IN1, OUTPUT);
-  pinMode(MOTORB_IN2, OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(MOTOR_CHA), readEncoder, RISING);
 }
 
 int speed = 0;
 
 void loop() {
   // print the string when a newline arrives:
+  int pos = 0;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+    pos = posi;
+  }
   if (stringComplete) {
     //Serial.println(inputString);
     // clear the string:
     stringComplete = false;
     speed = inputString.toInt();
-    Serial.println(speed);
+    //Serial.println(speed);
     inputString = "";
   }
   speed = speed > 255 ? 255 : speed;
   speed = speed < 0 ? 0: speed;
-  digitalWrite(MOTORA_IN1, HIGH);
-  digitalWrite(MOTORA_IN2, LOW);
-  analogWrite(MOTORA_EN, speed);
+  digitalWrite(MOTOR_IN1, HIGH);
+  digitalWrite(MOTOR_IN2, LOW);
+  analogWrite(MOTOR_EN, speed);
 
-  digitalWrite(MOTORB_IN1, HIGH);
-  digitalWrite(MOTORB_IN2, LOW);
-  analogWrite(MOTORB_EN, speed);
+  String msg = String(pos) + ", pwm = " + String(speed);
+  Serial.println(msg);
+}
+
+void readEncoder(){
+  int b = digitalRead(MOTOR_CHB);
+  if (b > 0){
+    posi++;
+  } else {
+    posi--;
+  }
 }
 
 /*
