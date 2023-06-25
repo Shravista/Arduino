@@ -6,9 +6,14 @@
 #define MOTOR_CHA 2
 #define MOTOR_CHB 3
 
+#define CPR 1.0f
+
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete
-volatile int posi = 0;
+volatile long int posi = 0;
+long int posCurrent = 0;
+long int posPrevious = 0;
+long int currentTime = 0;
 
 void setup() {
   // initialize serial:
@@ -22,16 +27,22 @@ void setup() {
   pinMode(MOTOR_CHB, INPUT);
 
   attachInterrupt(digitalPinToInterrupt(MOTOR_CHA), readEncoder, RISING);
+  currentTime = millis();
 }
 
 int speed = 0;
 
 void loop() {
   // print the string when a newline arrives:
-  int pos = 0;
+  long int dt = 0;
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
-    pos = posi;
+    posCurrent = posi;
+    dt = (millis() - currentTime)*1;
   }
+  currentTime = millis();
+  float dx = (float) (posCurrent - posPrevious);
+  double rpm = (dx)/(dt*CPR) * 60.0;
+  posPrevious = posCurrent;
   if (stringComplete) {
     //Serial.println(inputString);
     // clear the string:
@@ -46,8 +57,9 @@ void loop() {
   digitalWrite(MOTOR_IN2, LOW);
   analogWrite(MOTOR_EN, speed);
 
-  String msg = String(pos) + ", pwm = " + String(speed);
+  String msg = " pos = " + String(dx)+ " dt = " + String(dt) + " RPM = " + String(rpm, 2) + " PWM = " + String(speed);
   Serial.println(msg);
+  delay(10);
 }
 
 void readEncoder(){
