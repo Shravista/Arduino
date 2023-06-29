@@ -1,10 +1,10 @@
-#define MOTORA_EN 10
-#define MOTORA_IN1 8
-#define MOTORA_IN2 11
+#define MOTORA_EN 4
+#define MOTORA_IN1 5
+#define MOTORA_IN2 7
 
-#define MOTORB_EN 12
-#define MOTORB_IN1 7
-#define MOTORB_IN2 6
+#define MOTORB_EN 11
+#define MOTORB_IN1 6
+#define MOTORB_IN2 10
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete

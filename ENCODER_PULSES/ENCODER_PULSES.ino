@@ -1,10 +1,7 @@
 #include <util/atomic.h>
 
-#define MOTOR_EN 11
-#define MOTOR_IN1 6
-#define MOTOR_IN2 10
-#define MOTOR_CHA 19
-#define MOTOR_CHB 18
+#define MOTOR_CHA 2
+#define MOTOR_CHB 3
 
 #define CPR 405.0f
 
@@ -20,9 +17,6 @@ void setup() {
   Serial.begin(9600);
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
-  pinMode(MOTOR_EN, OUTPUT);
-  pinMode(MOTOR_IN1, OUTPUT);
-  pinMode(MOTOR_IN2, OUTPUT);
   pinMode(MOTOR_CHA, INPUT);
   pinMode(MOTOR_CHB, INPUT);
 
@@ -38,26 +32,8 @@ void loop() {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
     posCurrent = posi;
   }
-  dt = (millis() - currentTime);
-  currentTime = millis();
-  float dx = (float) (posCurrent - posPrevious);
-  double rpm = (dx)/(dt*CPR) * 60000.0;
-  posPrevious = posCurrent;
-  if (stringComplete) {
-    //Serial.println(inputString);
-    // clear the string:
-    stringComplete = false;
-    speed = inputString.toInt();
-    //Serial.println(speed);
-    inputString = "";
-  }
-  speed = speed > 255 ? 255 : speed;
-  speed = speed < 0 ? 0: speed;
-  digitalWrite(MOTOR_IN1, HIGH);
-  digitalWrite(MOTOR_IN2, LOW);
-  analogWrite(MOTOR_EN, speed);
 
-  String msg = "current = "+ String(posCurrent) +" pos = " + String(dx)+ " dt = " + String(dt) + " RPM = " + String(rpm, 2) + " PWM = " + String(speed);
+  String msg = "count = " + String(posCurrent);
   Serial.println(msg);
   delay(10);
 }

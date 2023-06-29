@@ -1,6 +1,6 @@
-#define MOTOR_EN 10
-#define MOTOR_IN1 8
-#define MOTOR_IN2 11
+#define MOTOR_EN 11
+#define MOTOR_IN1 6
+#define MOTOR_IN2 10
 
 String inputString = "";         // a String to hold incoming data
 bool stringComplete = false;  // whether the string is complete

@@ -32,6 +32,9 @@ void loop() {
   // print the string when a newline arrives:
   if (stringComplete) {
     Serial.println(inputString);
+    if (inputString.startsWith("M")){
+      Serial.println("True");
+    }
     // clear the string:
     inputString = "";
     stringComplete = false;
