@@ -60,7 +60,7 @@ void loop() {
   motor1.setSpeed(s);
   motor2.setSpeed(s);
 //  pos1 = MA.read();
-  String str = "pos1 = " + String(pos1) + " pos2 = " + String(pos2);
+  String str = "pos1 = " + String(M1_pos) + " pos2 = " + String(M2_pos);
   Serial.println(str);
 }
 
