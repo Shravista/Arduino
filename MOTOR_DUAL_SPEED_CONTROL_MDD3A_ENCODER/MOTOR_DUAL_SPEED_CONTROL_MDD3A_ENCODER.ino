@@ -39,6 +39,12 @@ void setup() {
 int s = 0;
 void loop() {
   // put your main code here, to run repeatedly:
+  int M1_pos = 0;
+  int M2_pos = 0;
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
+    M1_pos = pos1;
+    M2_pos = pos2;
+  }
   if (stringComplete) {
 //    Serial.println(inputString);
     // clear the string:
