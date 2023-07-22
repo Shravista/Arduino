@@ -3,8 +3,8 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 
-#define MOTOR1_CHA 2
-#define MOTOR1_CHB 3
+#define MOTOR1_CHA 3
+#define MOTOR1_CHB 2
 #define MOTOR2_CHA 18
 #define MOTOR2_CHB 19
 
