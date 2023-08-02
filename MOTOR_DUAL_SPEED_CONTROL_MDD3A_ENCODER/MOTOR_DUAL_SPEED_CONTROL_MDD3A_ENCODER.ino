@@ -11,11 +11,11 @@
 #define PPR1 560.0f
 #define GEAR_RATIO1 20.0f
 
-#define PPR2 1680.0f
-#define GEAR_RATIO2 60.0f
+#define PPR2 560.0f
+#define GEAR_RATIO2 20.0f
 
-CytronMD motor1(PWM_PWM, 6, 7);   
-CytronMD motor2(PWM_PWM, 5, 4);
+CytronMD motor1(PWM_PWM, 4, 5);   
+CytronMD motor2(PWM_PWM, 6, 7);
 Encoder MA(MOTOR1_CHA,MOTOR1_CHB);
 
 Encoder MB(MOTOR2_CHA,MOTOR2_CHB);
